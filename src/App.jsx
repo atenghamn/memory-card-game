@@ -9,6 +9,7 @@ function App() {
   const [cards, setCards] = useState([]); 
   const [container, setContainer] = useState("");
   const [count, setCount] = useState(1);
+  const [score, setScore] = useState(1000);
  
   // Hämtar hela kortleken
   useEffect(() => {
@@ -55,6 +56,9 @@ function App() {
 
         setCount(1);
       }
+
+      setScore(score - 1);
+      console.log("Din poäng är: " + score);
      
     }
     
