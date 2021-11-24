@@ -5,48 +5,37 @@ import Card from './Components/Card';
 
 function App() {
 
-  const [apiData, setApiData] = useState([]);
-  const [id, setId] = useState("");
-  const [card, setCard] = useState([]);
 
+  const [cards, setCards] = useState([]); 
+ 
+ 
+  // Hämtar hela kortleken
   useEffect(() => {
-    async function fetchData() {
-      const res = await fetch ("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+
+    async function addCards() {
+      const res = await fetch (`https://deckofcardsapi.com/api/deck/new/draw/?count=52`);
       const data = await res.json();
-      setApiData(data);
-      setId(data.deck_id);
-    }
+
+      setCards(data);  
     
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    async function displayCard() {
-      const res = await fetch (`https://deckofcardsapi.com/api/deck/${id}/draw/?count=1`);
-      const data = await res.json();
-      setCard(data.cards[0]);
-    }
-    displayCard();
+      }
+      addCards();
   }, []);
 
 
 
   return (
     <div className="App">
-  
+     
+     <div className="cardArea">
 
-    <Card card={card}></Card>
-      
+     {cards.cards !== undefined ? (cards.cards.map(item => (
+       <Card card={item}></Card>
+     ) )) :  (<p>Loading...</p> )}
 
-    <button onClick={() => {
-        console.log(apiData)
-      
-        for(let i = 0; i < apiData.remaining; i++){
-          console.log("hej");
-          // Do something to populate everycard
-        }
-
-      }}>TEST</button>
+    </div>
+ 
+    
      </div>
   );
 }
