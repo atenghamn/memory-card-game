@@ -1,10 +1,13 @@
 import "./Card.css";
 import cardBack from './img/pngegg.png';
 
-const Card = ({card, handleChoice, flipped}) => {
-    
+const Card = ({card, handleChoice, flipped, freeze}) => {
+    // If freeze is true, you cant click a card... mohahaha!
     const handleClick = () => {
-        handleChoice(card);
+        if(!freeze){
+            handleChoice(card);
+        }
+        
     }
 
     return (
@@ -21,7 +24,6 @@ const Card = ({card, handleChoice, flipped}) => {
             src={`${cardBack}`}
             alt="Baksida" 
             onClick={handleClick}   
-            className="cardImgBack"
             />
         </div>
          

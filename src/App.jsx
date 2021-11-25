@@ -1,17 +1,15 @@
-import { within } from '@testing-library/react';
 import { useState, useEffect } from 'react';
 import './App.css';
 import Card from './Components/Card';
-import cardBack from './Components/img/pngegg.png';
 
 function App() {
 
 
   const [cards, setCards] = useState([]); 
   const [score, setScore] = useState(1000);
-  const [matchedCards, setMatchedCards] = useState([]);
   const [cardOne, setCardOne] = useState(null);
   const [cardTwo, setCardTwo] = useState(null);
+  const [freeze, setFreeze] = useState()
 
  
   // Hämtar hela kortleken
@@ -41,6 +39,11 @@ function App() {
 
   useEffect(() => {
     if(cardOne && cardTwo) {
+
+      setFreeze(true);
+
+      console.log(cardOne.value);
+      console.log(cardTwo.value);
       if(cardOne.value === cardTwo.value) {
         setCards(prevCards => {
           return prevCards.map(card => {
@@ -53,7 +56,7 @@ function App() {
         })
         resetCards();
       } else {
-        resetCards();
+        setTimeout(() => resetCards(), 1500);
       }
     }
   }, [cardOne, cardTwo]);
@@ -63,6 +66,7 @@ function App() {
     setCardOne(null);
     setCardTwo(null);
     setScore(score - 1);
+    setFreeze(false);
   }
 
 
@@ -80,13 +84,14 @@ function App() {
         key = {card.code}
         handleChoice = {handleChoice}
         flipped={card === cardOne || card === cardTwo || card.matched === true}
+        freeze={freeze}
   
         ></Card>
       
      ) )) :  (<p>Loading...</p> )}
 
     </div>
- 
+      <div>Your score is {score}</div>
      </div>
   );
 

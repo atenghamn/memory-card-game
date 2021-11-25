@@ -8,7 +8,7 @@
     margin: 1rem;
 }
 
-
+/* Turn away the card around its Y-axis so it seems turned */
 .aCard .cardImgFront {
     transform: rotateY(90deg);
     position: absolute;
