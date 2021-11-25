@@ -1,97 +1,95 @@
+import { within } from '@testing-library/react';
 import { useState, useEffect } from 'react';
 import './App.css';
 import Card from './Components/Card';
-
+import cardBack from './Components/img/pngegg.png';
 
 function App() {
 
 
   const [cards, setCards] = useState([]); 
-  const [container, setContainer] = useState("");
-  const [count, setCount] = useState(1);
   const [score, setScore] = useState(1000);
+  const [matchedCards, setMatchedCards] = useState([]);
+  const [cardOne, setCardOne] = useState(null);
+  const [cardTwo, setCardTwo] = useState(null);
+
  
   // Hämtar hela kortleken
   useEffect(() => {
-
     async function addCards() {
       const res = await fetch (`https://deckofcardsapi.com/api/deck/new/draw/?count=52`);
       const data = await res.json();
 
-      console.log(data);
-
-  
-
-      setCards(data);  
-    
-      }
-      addCards();
+      setCards(data);
+    console.log(data);
+    setCards(prevCards => {
+      return prevCards.cards.map(card => {
+          card.matched=false;
+          return card;      
+    })
+  });
+}
+    addCards();
+    console.log("__________________________");
+    console.log(cards.length)
   }, []);
 
 
+  const handleChoice = (card) => {
+    cardOne ? setCardTwo(card) : setCardOne(card);
+  }
 
-
-
-  function turnCardClick(e) {
-
- 
-    if (count === 1) {
-      console.log("Count är: " + count);
-     
-      setContainer(e.value);
-
-      console.log(e.value + " ska matcha med");
-      console.log("detta värde " +container)
-      setCount(count + 1);
-    }
-    else if( count === 2){
-      console.log("Count är: " + count);
-      console.log(e.value + " ska matcha med");
-      console.log("detta värde " +container)
-
-      if(e.value === container) {
-          console.log("Match!");
-          setCount(1)
-        } 
-
-        setCount(1);
+  useEffect(() => {
+    if(cardOne && cardTwo) {
+      if(cardOne.value === cardTwo.value) {
+        setCards(prevCards => {
+          return prevCards.map(card => {
+            if(card.code === cardOne.code){
+              return {...card, matched: true}
+            } else{
+              return card;
+            }
+          })
+        })
+        resetCards();
+      } else {
+        resetCards();
       }
-
-      setScore(score - 1);
-      console.log("Din poäng är: " + score);
-     
     }
-    
-  
+  }, [cardOne, cardTwo]);
 
-  
-  
 
-  
+  const resetCards = () => {
+    setCardOne(null);
+    setCardTwo(null);
+    setScore(score - 1);
+  }
+
+
 
   return (
     <div className="App">
      
-     <div className="cardArea">
+      <div className="cardArea">
 
   
-     {cards.cards !== undefined ? (cards.cards.map(item => (
-       
-      <div 
-      key={item.code}
-      onClick = {(e) => turnCardClick(item)}
-      >
-        <Card card={item}
+     {cards.length === 52 ? (cards.map(card => ( 
 
+        <Card 
+        card={card}
+        key = {card.code}
+        handleChoice = {handleChoice}
+        flipped={card === cardOne || card === cardTwo || card.matched === true}
+  
         ></Card>
-      </div>
-       
+      
      ) )) :  (<p>Loading...</p> )}
 
     </div>
  
      </div>
   );
-}
+
+     }
 
 export default App;

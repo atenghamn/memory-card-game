@@ -1,14 +1,29 @@
 import "./Card.css";
 import cardBack from './img/pngegg.png';
 
-const Card = ({card}) => {
+const Card = ({card, handleChoice, flipped}) => {
     
+    const handleClick = () => {
+        handleChoice(card);
+    }
 
     return (
         <div className="aCard">   
         
-         {/* <img src={`${card.image}`} alt="Framsida" className="cardImg"/>  */}
-         <img src={`${cardBack}`} alt="Test" className="cardImg"/>
+        <div className={flipped ? "flipped" : ""}>
+            <img 
+            src={`${card.image}`} 
+            alt="Framsida" 
+            className="cardImgFront"
+            />
+            
+            <img 
+            src={`${cardBack}`}
+            alt="Baksida" 
+            onClick={handleClick}   
+            className="cardImgBack"
+            />
+        </div>
          
         </div>
     );

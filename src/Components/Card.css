@@ -1,6 +1,19 @@
+.aCard {
+    position: relative;
+}
 
-.cardImg{
-    
+
+.aCard img{
     height:7rem;
     margin: 1rem;
+}
+
+
+.aCard .cardImgFront {
+    transform: rotateY(90deg);
+    position: absolute;
+}
+
+.flipped .cardImgFront {
+    transform: rotateY(0deg);
 }
