@@ -12,14 +12,14 @@ function App() {
   const [freeze, setFreeze] = useState()
 
  
-  // Hämtar hela kortleken
   useEffect(() => {
+    // Get the cards
     async function addCards() {
       const res = await fetch (`https://deckofcardsapi.com/api/deck/new/draw/?count=52`);
       const data = await res.json();
 
       setCards(data);
-    console.log(data);
+      // Run map to add a matched key to every card in the deck
     setCards(prevCards => {
       return prevCards.cards.map(card => {
           card.matched=false;
@@ -28,34 +28,34 @@ function App() {
   });
 }
     addCards();
-    console.log("__________________________");
-    console.log(cards.length)
   }, []);
 
-
+  // Set the card to either cardOne or cardTwo to prevenet it from beeing to many active cards
   const handleChoice = (card) => {
     cardOne ? setCardTwo(card) : setCardOne(card);
   }
 
   useEffect(() => {
+    // Make sure we got to active cards
     if(cardOne && cardTwo) {
-
+      // Freeze so you cant flip more than two cards at the same time
       setFreeze(true);
-
-      console.log(cardOne.value);
-      console.log(cardTwo.value);
+      // Check for a match
       if(cardOne.value === cardTwo.value) {
+        // If they match change matched to true in for the two cards
         setCards(prevCards => {
           return prevCards.map(card => {
-            if(card.code === cardOne.code){
+            if(card.value === cardOne.value){
               return {...card, matched: true}
             } else{
               return card;
             }
           })
         })
+        // Call the reset function so that we can have two new cards, stop the freeze and count down the score
         resetCards();
       } else {
+        // Do the same as above but with a slight delay so that you can check the value of the second card
         setTimeout(() => resetCards(), 1500);
       }
     }
@@ -76,7 +76,7 @@ function App() {
      
       <div className="cardArea">
 
-  
+    {/* Map em out... */}
      {cards.length === 52 ? (cards.map(card => ( 
 
         <Card 
