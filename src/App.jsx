@@ -18,6 +18,7 @@ function App() {
       const res = await fetch (`https://deckofcardsapi.com/api/deck/new/draw/?count=52`);
       const data = await res.json();
 
+      console.log(data);
       setCards(data);
       // Run map to add a matched key to every card in the deck
     setCards(prevCards => {
@@ -45,7 +46,7 @@ function App() {
         // If they match change matched to true in for the two cards
         setCards(prevCards => {
           return prevCards.map(card => {
-            if(card.value === cardOne.value){
+            if(card.code === cardOne.code || card.code === cardTwo.code){
               return {...card, matched: true}
             } else{
               return card;
