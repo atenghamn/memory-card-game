@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import Card from './Components/Card';
+import WinModal from './Components/WinModal';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
   const [cardOne, setCardOne] = useState(null);
   const [cardTwo, setCardTwo] = useState(null);
   const [freeze, setFreeze] = useState()
+  const [showModal, setShowModal] = useState(false);
 
  
   useEffect(() => {
@@ -32,8 +34,9 @@ function App() {
   }, []);
 
   // Set the card to either cardOne or cardTwo to prevenet it from beeing to many active cards
-  const handleChoice = (card) => {
+  const handleChoice = (card) => {;
     cardOne ? setCardTwo(card) : setCardOne(card);
+    winCheck();
   }
 
   useEffect(() => {
@@ -45,7 +48,8 @@ function App() {
       if(cardOne.value === cardTwo.value) {
         // If they match change matched to true in for the two cards
         setCards(prevCards => {
-          return prevCards.map(card => {
+         return prevCards.map(card => {
+           winCheck();
             if(card.code === cardOne.code || card.code === cardTwo.code){
               return {...card, matched: true}
             } else{
@@ -58,9 +62,26 @@ function App() {
       } else {
         // Do the same as above but with a slight delay so that you can check the value of the second card
         setTimeout(() => resetCards(), 1500);
+ 
       }
     }
   }, [cardOne, cardTwo]);
+
+  
+
+  const winCheck = () => {
+    let matchedCards = 0;
+    cards.forEach(card => {
+      if(card.matched){
+        matchedCards += 1;
+      }
+    })
+
+    if (matchedCards >= 50){
+      setShowModal(true);
+    }
+   
+  }
 
 
   const resetCards = () => {
@@ -70,12 +91,20 @@ function App() {
     setFreeze(false);
   }
 
-
+  
 
   return (
     <div className="App">
-     
+      {!showModal &&
+       <div>Current score is: {score}</div>
+      }
+    {showModal && 
+      <WinModal score={score}/>
+    }
+    {!showModal && 
       <div className="cardArea">
+
+       
 
     {/* Map em out... */}
      {cards.length === 52 ? (cards.map(card => ( 
@@ -84,6 +113,7 @@ function App() {
         card={card}
         key = {card.code}
         handleChoice = {handleChoice}
+        winCheck = {winCheck}
         flipped={card === cardOne || card === cardTwo || card.matched === true}
         freeze={freeze}
   
@@ -92,7 +122,7 @@ function App() {
      ) )) :  (<p>Loading...</p> )}
 
     </div>
-      <div>Your score is {score}</div>
+    }
      </div>
   );
 
