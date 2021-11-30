@@ -68,7 +68,7 @@ function App() {
   }, [cardOne, cardTwo]);
 
   
-
+  // If 50 cards are matched (if you got only two cards left there are nothing more to guess on) then you win. 
   const winCheck = () => {
     let matchedCards = 0;
     cards.forEach(card => {
@@ -76,14 +76,14 @@ function App() {
         matchedCards += 1;
       }
     })
-
+    // When ther's only two cards left you win! 
     if (matchedCards >= 50){
       setShowModal(true);
     }
    
   }
 
-
+  // Reset the two active cards and decrement the score by 1. 
   const resetCards = () => {
     setCardOne(null);
     setCardTwo(null);
@@ -92,9 +92,10 @@ function App() {
   }
 
   
-
+  // showModal variabl controlls wich elements are displayed
   return (
     <div className="App">
+      
       {!showModal &&
        <div>Current score is: {score}</div>
       }
